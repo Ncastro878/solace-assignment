@@ -30,6 +30,7 @@ export interface Advocate {
   specialties: string[];
   yearsOfExperience: number;
   phoneNumber: string;
+  totalCount: number;
 }
 
 export { advocates };

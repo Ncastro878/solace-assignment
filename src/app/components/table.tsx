@@ -10,33 +10,32 @@ export default function Table(props: TableProps) {
   const [filteredAdvocates, setFilteredAdvocates] = useState([]);
 
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
-      });
-    });
+    async function fetchAdvocates() {
+      const advocatesResponse = await fetch("/api/advocates")
+      const advocatesJson = await advocatesResponse.json()
+      setAdvocates(advocatesJson.data);
+      setFilteredAdvocates(advocatesJson.data);
+    }
+    fetchAdvocates();
   }, []);
 
   const onSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
-
-    document.getElementById("search-term").innerHTML = searchTerm;
-
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
+    const searchTermElement: HTMLSpanElement | null = document.getElementById("search-term") as HTMLSpanElement;
+    if (searchTermElement) {
+      searchTermElement.innerHTML = searchTerm;
+    }
+    const filteredAdvocates = advocates.filter((advocate: Advocate) => {
       return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        advocate.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        advocate.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        advocate.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        advocate.degree.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        advocate.specialties.some((s: string) => s.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        advocate.yearsOfExperience.toString().toLowerCase().includes(searchTerm.toLowerCase())
       );
     });
-
-    setFilteredAdvocates(filteredAdvocates);
+    setFilteredAdvocates(filteredAdvocates); 
   };
 
   const onClickSearchButton = () => {

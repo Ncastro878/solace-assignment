@@ -56,22 +56,27 @@ export default function Table({ initialAdvocates, initialTotalCount }: TableProp
 
   return (
     <>
-      <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id="search-term"></span>
-        </p>
+      <div className="flex items-left">
         <input value={searchTerm} style={{ border: "1px solid black" }} 
+          className="h-7"
           onChange={onSearchInputChange} 
           onKeyDown={(e) => e.key === 'Enter' && onClickSearchButton()}
+          placeholder="Search advocates"
         />
-        <button className="border border-gray-400 rounded-md mx-2 px-2 active:scale-95 transition-transform duration-100" onClick={onClickResetButton}>Reset</button>
-        <button className="border border-gray-400 rounded-md mx-2 px-2 active:scale-95 transition-transform duration-100" onClick={onClickSearchButton}>Search</button>
+        <button className="h-7 border-2 border-[#285e50] bg-[#285e50] text-white rounded-md mx-2 px-2 active:scale-95 transition-transform duration-100 hover:bg-[#1d4339]" onClick={onClickResetButton}>Reset</button>
+        <button className="h-7 border-2 border-[#285e50] bg-[#285e50] text-white rounded-md mx-2 px-2 active:scale-95 transition-transform duration-100 hover:bg-[#1d4339]" onClick={onClickSearchButton}>Search</button>
+        {
+          searchTerm && (
+            <p className="ml-2 border-2 border-[#285e50] rounded-md px-2 w-[250px]">
+              Searching for: <span id="search-term"></span>
+            </p>
+          )
+        }
       </div>
       <br />
       <br />
-      <table className="min-w-full border border-gray-200 rounded-lg">
-        <thead className="bg-gray-50">
+      <table className="min-w-full border border-[#285e50] rounded-lg">
+        <thead className="bg-gray-50 bg-[#285e50] text-white">
           <tr>
             <th className="border-b px-6 py-3 text-left">First Name</th>
             <th className="border-b px-6 py-3 text-left">Last Name</th>
@@ -85,14 +90,14 @@ export default function Table({ initialAdvocates, initialTotalCount }: TableProp
         <tbody className="divide-y divide-gray-200">
           {filteredAdvocates.map((advocate: Advocate, index: number) => {
             return (
-              <tr key={`${advocate.id}-${index}`}>
+              <tr key={`${advocate.id}-${index}`} className="hover:bg-gray-100">
                 <td className="px-6 py-4">{advocate.firstName}</td>
                 <td className="px-6 py-4">{advocate.lastName}</td>
                 <td className="px-6 py-4">{advocate.city}</td>
                 <td className="px-6 py-4">{advocate.degree}</td>
                 <td className="px-6 py-4">
                   {advocate.specialties.map((s, index) => (
-                    <div key={`${advocate.id}-${s}-${index}`}>{s}</div>
+                    <li key={`${advocate.id}-${s}-${index}`}>{s}</li>
                   ))}
                 </td>
                 <td className="px-6 py-4">{advocate.yearsOfExperience}</td>
@@ -123,7 +128,7 @@ function PaginationControls({ currentPage, setCurrentPage, totalCount }: Paginat
       <button
         onClick={() => setCurrentPage((prev) => prev - 1)}
         disabled={currentPage === 0}
-        className="px-4 py-2 border border-gray-400 rounded-md disabled:opacity-50"
+        className="px-4 py-2 border border-gray-400 rounded-md disabled:opacity-50 bg-[#285e50] text-white hover:bg-[#1d4339]"
       >
         Previous
       </button>
@@ -134,7 +139,7 @@ function PaginationControls({ currentPage, setCurrentPage, totalCount }: Paginat
       <button
         onClick={() => setCurrentPage((prev) => prev + 1)}
         disabled={currentPage >= Math.ceil(totalCount / dbDefaultLimit) - 1}
-        className="px-4 py-2 border border-gray-400 rounded-md disabled:opacity-50"
+        className="px-4 py-2 border border-gray-400 rounded-md disabled:opacity-50 bg-[#285e50] text-white hover:bg-[#1d4339]"
       >
         Next
       </button>
